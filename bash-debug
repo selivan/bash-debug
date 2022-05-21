@@ -21,6 +21,7 @@ function _bash_debug_trap_DEBUG() {
     fi
 
     echo "# $BASH_COMMAND";
+    # -r do not interpret backslash escaped characters
     # -e Use readline in interactive shell
     # -p PROMPT
     while read -r -e -p "($_bash_debug_last_retcode) debug> " _bash_debug_command; do
