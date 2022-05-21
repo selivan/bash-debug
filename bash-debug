@@ -22,7 +22,7 @@ function _bash_debug_trap_DEBUG() {
     echo "# $BASH_COMMAND";
     # -e Use readline in interactive shell
     # -p PROMPT
-    while read -e -p "($_bash_debug_last_retcode) debug> " _bash_debug_command; do
+    while read -r -e -p "($_bash_debug_last_retcode) debug> " _bash_debug_command; do
         if [ -n "$_bash_debug_command" ]; then
             eval "$_bash_debug_command";
         else
