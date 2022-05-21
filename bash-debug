@@ -15,6 +15,7 @@ function _bash_debug_trap_DEBUG() {
     _bash_debug_last_retcode="$?"
 
     # skip prompt when starting script itself
+    # shellcheck disable=SC2016
     if [ "$BASH_COMMAND" == 'source "$_bash_debug_script" "$@"' ]; then
         return
     fi
@@ -44,5 +45,6 @@ else
     # -T  If set, the DEBUG and RETURN traps are inherited by shell functions.
     set -T
     trap '_bash_debug_trap_DEBUG' DEBUG
+    # shellcheck disable=SC1090
     source "$_bash_debug_script" "$@"
 fi
