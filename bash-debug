@@ -1,0 +1,48 @@
+#!/bin/bash
+
+function _bash_debug_print_usage() {
+    echo "Usage: $0 <script to debug> [script args]"
+    echo
+    echo "bash debugger"
+    echo "Each script command is printed before execution"
+    echo "Then command prompt appears (no autocompletion)"
+    echo "Prompt includes the last command return value"
+    echo "You can print a command to execute or an empty line to continue"
+    echo "Note: set -T is used, changing DEBUG and RETURN traps inheritance"
+}
+
+function _bash_debug_trap_DEBUG() {
+    _bash_debug_last_retcode="$?"
+
+    # skip prompt when starting script itself
+    if [ "$BASH_COMMAND" == 'source "$_bash_debug_script" "$@"' ]; then
+        return
+    fi
+
+    echo "# $BASH_COMMAND";
+    # -e Use readline in interactive shell
+    # -p PROMPT
+    while read -e -p "($_bash_debug_last_retcode) debug> " _bash_debug_command; do
+        if [ -n "$_bash_debug_command" ]; then
+            eval "$_bash_debug_command";
+        else
+            break;
+        fi;
+    done
+}
+
+if [ -z "$1" ]; then
+    _bash_debug_print_usage
+else
+    _bash_debug_script="$1"
+    shift
+    if [ ! -f "$_bash_debug_script" ]; then
+        echo "ERROR: not a readable file: $_bash_debug_script"
+        _bash_debug_print_usage
+        exit 1
+    fi
+    # -T  If set, the DEBUG and RETURN traps are inherited by shell functions.
+    set -T
+    trap '_bash_debug_trap_DEBUG' DEBUG
+    source "$_bash_debug_script" "$@"
+fi
