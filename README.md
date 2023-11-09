@@ -6,4 +6,4 @@ Each script command is printed before execution. Then command prompt appears (no
 bash-debug script-to-debug.sh [script args]
 ```
 
-Note: `set -T` is used, changing DEBUG and RETURN traps inheritance.
+Note: `set -o functrace` is used, changing DEBUG and RETURN traps inheritance for shell functions.
