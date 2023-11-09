@@ -14,14 +14,14 @@ function _bash_debug_print_usage() {
 function _bash_debug_trap_DEBUG() {
     _bash_debug_last_retcode="$?"
 
-    # skip prompt when starting script itself
+    # Skip prompt when starting script itself
     # shellcheck disable=SC2016
     if [ "$BASH_COMMAND" == 'source "$_bash_debug_script" "$@"' ]; then
         return
     fi
 
     echo "# $BASH_COMMAND";
-    # -r do not interpret backslash escaped characters
+    # -r Do not interpret backslash escaped characters
     # -e Use readline in interactive shell
     # -p PROMPT
     while read -r -e -p "($_bash_debug_last_retcode) debug> " _bash_debug_command; do
@@ -43,8 +43,8 @@ else
         _bash_debug_print_usage
         exit 1
     fi
-    # -T  If set, the DEBUG and RETURN traps are inherited by shell functions.
-    set -T
+    # -o functrace  Same as -T. If set, the DEBUG and RETURN traps are inherited by shell functions.
+    set -o functrace
     trap '_bash_debug_trap_DEBUG' DEBUG
     # shellcheck disable=SC1090
     source "$_bash_debug_script" "$@"
